@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "url": "https://github.com/mdanshin/market/releases",
-  "notes": "Первый релиз. Файл перезаписывается CI при публикации новой версии.",
-  "date": "2026-07-15T00:00:00Z"
+  "url": "https://github.com/mdanshin/market/releases/download/v0.1.0/ozon-desk-0.1.0-arm64.dmg",
+  "notes": "Релиз v0.1.0",
+  "date": "2026-07-15T07:06:30Z"
 }
