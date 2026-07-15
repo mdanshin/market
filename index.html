@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ozon Desk — настольный кабинет продавца Ozon</title>
+    <meta
+      name="description"
+      content="Ozon Desk — красивое настольное приложение для продавцов Ozon Seller: пульс дня, аналитика, юнит-экономика, заказы и география. macOS."
+    />
+    <style>
+      /* ——— Dark theme (default), значения из дизайн-системы Ozon Desk ——— */
+      :root {
+        --bg: #0e1016;
+        --bg-2: #0b0d13;
+        --card: #14171f;
+        --card-2: #171b25;
+        --fg: #e7ebef;
+        --muted: #8f96a3;
+        --primary: #2986ff; /* Ozon blue (dark) */
+        --primary-2: #005bff; /* Ozon blue (deep) */
+        --primary-tint: rgba(41, 134, 255, 0.14);
+        --border: #272c34;
+        --ring: rgba(41, 134, 255, 0.55);
+        --shadow-card: 0 2px 8px -2px rgba(0, 0, 0, 0.5), 0 12px 34px -8px rgba(0, 0, 0, 0.6);
+        --shadow-glow: 0 0 0 1px rgba(41, 134, 255, 0.18), 0 10px 34px -8px rgba(41, 134, 255, 0.45);
+        --shadow-shot: 0 40px 90px -30px rgba(0, 0, 0, 0.8);
+        --glow-a: rgba(41, 134, 255, 0.16);
+        --glow-b: rgba(41, 134, 255, 0.08);
+        --chrome: #0b0d13;
+      }
+
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg: #f7f9fc;
+          --bg-2: #eef2f8;
+          --card: #ffffff;
+          --card-2: #f4f7fb;
+          --fg: #141a29;
+          --muted: #5b6474;
+          --primary: #005bff; /* Ozon blue #005BFF */
+          --primary-2: #0047cc;
+          --primary-tint: rgba(0, 91, 255, 0.09);
+          --border: #dfe3ea;
+          --ring: rgba(0, 91, 255, 0.45);
+          --shadow-card: 0 2px 8px -2px rgba(20, 26, 41, 0.06), 0 8px 24px -6px rgba(20, 26, 41, 0.1);
+          --shadow-glow: 0 0 0 1px rgba(0, 91, 255, 0.14), 0 10px 30px -8px rgba(0, 91, 255, 0.3);
+          --shadow-shot: 0 40px 90px -30px rgba(20, 26, 41, 0.28);
+          --glow-a: rgba(0, 91, 255, 0.12);
+          --glow-b: rgba(0, 91, 255, 0.06);
+          --chrome: #eef2f8;
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Inter var', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        background: var(--bg);
+        color: var(--fg);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+        font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+        background-image:
+          radial-gradient(60rem 40rem at 82% -12%, var(--glow-a), transparent 60%),
+          radial-gradient(50rem 30rem at -12% 8%, var(--glow-b), transparent 55%);
+        background-attachment: fixed;
+      }
+
+      .wrap {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      a {
+        color: var(--primary);
+        text-decoration: none;
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 3px;
+        border-radius: 10px;
+      }
+
+      /* ——— Header ——— */
+      header {
+        padding: 26px 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .logo {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--primary), var(--primary-2));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow-glow);
+        flex-shrink: 0;
+      }
+      .brand {
+        font-weight: 700;
+        font-size: 18px;
+        letter-spacing: -0.02em;
+      }
+      .brand small {
+        display: block;
+        font-weight: 500;
+        font-size: 12px;
+        color: var(--muted);
+        letter-spacing: 0;
+        line-height: 1.2;
+      }
+      .header-spacer {
+        flex: 1;
+      }
+      .header-link {
+        font-size: 14px;
+        color: var(--muted);
+        font-weight: 500;
+      }
+      .header-link:hover {
+        color: var(--fg);
+      }
+
+      /* ——— Hero ——— */
+      .hero {
+        text-align: center;
+        padding: 60px 0 12px;
+      }
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--primary);
+        background: var(--primary-tint);
+        border: 1px solid var(--border);
+        padding: 6px 12px;
+        border-radius: 999px;
+        letter-spacing: 0.01em;
+      }
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+        background: var(--primary);
+        box-shadow: 0 0 0 4px var(--primary-tint);
+      }
+      .hero h1 {
+        font-size: clamp(34px, 6vw, 52px);
+        line-height: 1.08;
+        letter-spacing: -0.03em;
+        font-weight: 800;
+        margin: 22px auto 0;
+        max-width: 15ch;
+      }
+      .hero h1 span {
+        background: linear-gradient(135deg, var(--primary), var(--primary-2));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .hero p {
+        color: var(--muted);
+        font-size: clamp(16px, 2.4vw, 19px);
+        margin: 20px auto 0;
+        max-width: 600px;
+      }
+      .cta {
+        margin-top: 30px;
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        font-weight: 600;
+        font-size: 15px;
+        padding: 13px 22px;
+        border-radius: 14px;
+        transition:
+          transform 0.15s cubic-bezier(0.22, 1, 0.36, 1),
+          box-shadow 0.15s ease,
+          background 0.15s ease;
+      }
+      .btn.primary {
+        background: linear-gradient(135deg, var(--primary), var(--primary-2));
+        color: #fff;
+        box-shadow: var(--shadow-glow);
+      }
+      .btn.primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 0 0 1px rgba(41, 134, 255, 0.3), 0 16px 40px -8px rgba(41, 134, 255, 0.55);
+      }
+      .btn.secondary {
+        background: var(--card);
+        border: 1px solid var(--border);
+        color: var(--fg);
+        box-shadow: var(--shadow-card);
+      }
+      .btn.secondary:hover {
+        transform: translateY(-1px);
+        border-color: var(--primary);
+      }
+      .ver {
+        color: var(--muted);
+        font-size: 13px;
+        margin-top: 14px;
+        min-height: 18px;
+      }
+      .ver b {
+        color: var(--fg);
+        font-weight: 600;
+      }
+
+      /* ——— Screenshot in a macOS window frame (signature) ——— */
+      .shot {
+        margin: 44px auto 0;
+        max-width: 940px;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: var(--card);
+        box-shadow: var(--shadow-shot);
+      }
+      .shot-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        background: var(--chrome);
+        border-bottom: 1px solid var(--border);
+      }
+      .tl {
+        width: 11px;
+        height: 11px;
+        border-radius: 999px;
+        background: var(--border);
+      }
+      .tl.r {
+        background: #ff5f57;
+      }
+      .tl.y {
+        background: #febc2e;
+      }
+      .tl.g {
+        background: #28c840;
+      }
+      .shot-title {
+        margin-left: 10px;
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 500;
+      }
+      .shot img {
+        width: 100%;
+        display: block;
+      }
+
+      /* ——— Features ——— */
+      .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 16px;
+        padding: 68px 0 20px;
+      }
+      .feature {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 22px;
+        box-shadow: var(--shadow-card);
+        transition:
+          transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+          border-color 0.18s ease;
+      }
+      .feature:hover {
+        transform: translateY(-2px);
+        border-color: var(--primary);
+      }
+      .ficon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: var(--primary-tint);
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+      }
+      .feature h3 {
+        font-size: 16px;
+        font-weight: 650;
+        letter-spacing: -0.01em;
+        margin-bottom: 7px;
+      }
+      .feature p {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      /* ——— Trust / security line ——— */
+      .trust {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--muted);
+        font-size: 14px;
+        padding: 4px 2px 8px;
+      }
+      .trust svg {
+        color: var(--primary);
+        flex-shrink: 0;
+      }
+
+      /* ——— Unsigned build note ——— */
+      .note {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--primary);
+        border-radius: 14px;
+        padding: 18px 20px;
+        color: var(--muted);
+        font-size: 14px;
+        margin: 40px 0;
+      }
+      .note b {
+        color: var(--fg);
+        font-weight: 600;
+      }
+
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 28px 0 40px;
+        color: var(--muted);
+        font-size: 13px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      /* ——— Motion ——— */
+      .reveal {
+        opacity: 0;
+        transform: translateY(10px);
+        animation: reveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      }
+      .reveal.d1 { animation-delay: 0.06s; }
+      .reveal.d2 { animation-delay: 0.12s; }
+      .reveal.d3 { animation-delay: 0.18s; }
+      @keyframes reveal {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
+        .reveal {
+          opacity: 1;
+          transform: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="logo" aria-hidden="true">
+          <!-- «Desk»: панель с растущими столбцами аналитики -->
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+            <rect x="4" y="13" width="3.4" height="6" rx="1" fill="#fff" opacity="0.7" />
+            <rect x="10.3" y="9" width="3.4" height="10" rx="1" fill="#fff" opacity="0.85" />
+            <rect x="16.6" y="5" width="3.4" height="14" rx="1" fill="#fff" />
+          </svg>
+        </div>
+        <div class="brand">
+          Ozon Desk
+          <small>кабинет продавца</small>
+        </div>
+        <div class="header-spacer"></div>
+        <a class="header-link" id="repo-top" href="#">GitHub</a>
+      </header>
+
+      <section class="hero">
+        <span class="eyebrow reveal"><span class="dot"></span>Настольное приложение · macOS</span>
+        <h1 class="reveal d1">Кабинет продавца <span>Ozon</span>, каким он должен быть</h1>
+        <p class="reveal d1">
+          Пульс продаж, аналитика за период, юнит-экономика заказа и география — в быстром нативном
+          приложении. Ключи хранятся в системе, всё считается на вашем компьютере.
+        </p>
+        <div class="cta reveal d2">
+          <a class="btn primary" id="download" href="#">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 3v11m0 0 4-4m-4 4-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            Скачать для macOS
+          </a>
+          <a class="btn secondary" id="releases" href="#">Все версии</a>
+        </div>
+        <div class="ver reveal d2" id="version"></div>
+      </section>
+
+      <figure class="shot reveal d3">
+        <div class="shot-bar" aria-hidden="true">
+          <span class="tl r"></span><span class="tl y"></span><span class="tl g"></span>
+          <span class="shot-title">Ozon Desk — Обзор</span>
+        </div>
+        <img
+          src="./screenshot.png"
+          alt="Интерфейс Ozon Desk"
+          onerror="this.closest('.shot').style.display='none'"
+        />
+      </figure>
+
+      <section class="features">
+        <div class="feature">
+          <div class="ficon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path d="M4 15l4-5 3 3 5-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M4 20h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <circle cx="19" cy="6" r="1.6" fill="currentColor" />
+            </svg>
+          </div>
+          <h3>Обзор и аналитика</h3>
+          <p>Пульс дня и метрики за период со сравнением период-к-периоду: заказы, выручка, конверсия.</p>
+        </div>
+
+        <div class="feature">
+          <div class="ficon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="6" width="18" height="12" rx="2.5" stroke="currentColor" stroke-width="2" />
+              <path d="M3 10h18" stroke="currentColor" stroke-width="2" />
+              <path d="M7 14.5h3" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </div>
+          <h3>Финансы и юнит-экономика</h3>
+          <p>Полная экономика заказа из Finance API: комиссии, логистика, эквайринг и чистая прибыль.</p>
+        </div>
+
+        <div class="feature">
+          <div class="ficon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path d="M12 3 20 7v10l-8 4-8-4V7l8-4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+              <path d="m4 7 8 4 8-4M12 11v10" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+            </svg>
+          </div>
+          <h3>Заказы FBS и FBO</h3>
+          <p>Отправления в одном списке со статусами ровно как в Ozon — без выдуманных названий и лишних кликов.</p>
+        </div>
+
+        <div class="feature">
+          <div class="ficon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+              <circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2" />
+            </svg>
+          </div>
+          <h3>География заказов</h3>
+          <p>Офлайн-карта России: откуда приходят заказы, по регионам — работает без интернета и без утечек.</p>
+        </div>
+      </section>
+
+      <div class="trust">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <rect x="5" y="10" width="14" height="10" rx="2.5" stroke="currentColor" stroke-width="2" />
+          <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="2" />
+        </svg>
+        <span>
+          Ключи API — в системном хранилище (Keychain). Запросы к Ozon идут только из защищённого
+          процесса, интерфейс никогда не видит секретов.
+        </span>
+      </div>
+
+      <div class="note" id="unsigned">
+        <b>⚠️ Сборка без подписи Apple.</b> При первом запуске: правый клик по приложению → «Открыть»,
+        затем подтвердите. Дальше — открывается как обычно. Подпись разработчика появится в следующих версиях.
+      </div>
+
+      <footer>
+        <span>Ozon Desk · настольный кабинет продавца Ozon Seller</span>
+        <a id="repo" href="#">релизы на GitHub</a>
+      </footer>
+    </div>
+
+    <script>
+      const OWNER = 'mdanshin',
+        REPO = 'market'
+      const releases = `https://github.com/${OWNER}/${REPO}/releases`
+      document.getElementById('releases').href = releases
+      document.getElementById('download').href = releases
+      document.getElementById('repo').href = releases
+      document.getElementById('repo-top').href = releases
+      // Never trust feed fields: only accept an https download URL, and set the
+      // version as text (no innerHTML) so a tampered feed can't inject markup.
+      const isHttps = (u) => {
+        try {
+          return new URL(u).protocol === 'https:'
+        } catch {
+          return false
+        }
+      }
+      fetch('./latest.json', { cache: 'no-store' })
+        .then((r) => (r.ok ? r.json() : null))
+        .then((f) => {
+          if (!f || !f.version) return
+          if (f.url && isHttps(f.url)) document.getElementById('download').href = f.url
+          const v = document.getElementById('version')
+          v.textContent = ''
+          v.append('Версия ')
+          const b = document.createElement('b')
+          b.textContent = String(f.version)
+          v.append(b, ' · для Apple Silicon')
+        })
+        .catch(() => {})
+    </script>
+  </body>
+</html>
